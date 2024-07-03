@@ -1,8 +1,7 @@
 import flatpickr from "flatpickr";
-
 import iziToast from "izitoast";
 
-const datetimePicker = document.getElementById('datetime-picker')
+const datetimePicker = document.getElementById('datetime-picker');
 
 let userSelectedDate;
 const currentDate = new Date();
@@ -16,18 +15,21 @@ const options = {
 
     if (userSelectedDate <= currentDate) {
       iziToast.show({
+        backgroundColor: '#ef4040',
+        messageColor: '#fff',
+        messageSize: '16px',
+        position: 'topRight',
         message: 'Please choose a date in the future'
       });
       document.getElementById('startButton').disabled = true;
     } else {
       document.getElementById('startButton').disabled = false;
     }
-
     console.log(userSelectedDate);
   },
 };
 
-flatpickr(datetimePicker, options)
+flatpickr(datetimePicker, options);
 
 function calculateTimeDifference(endDate) {
   const currentTime = new Date().getTime();
@@ -36,7 +38,6 @@ function calculateTimeDifference(endDate) {
 }
 
 function convertMs(ms) {
-
   const second = 1000;
   const minute = second * 60;
   const hour = minute * 60;
@@ -56,40 +57,28 @@ function addLeadingZero(value) {
 
 let timeDifference;
 
-function updateTimer() {
-  const endDate = datetimePicker.value;
-
-  timeDifference = calculateTimeDifference(endDate);
-
-  const { days, hours, minutes, seconds } = convertMs(timeDifference);
-
-  document.getElementById('days').textContent = addLeadingZero(days);
-  document.getElementById('hours').textContent = addLeadingZero(hours);
-  document.getElementById('minutes').textContent = addLeadingZero(minutes);
-  document.getElementById('seconds').textContent = addLeadingZero(seconds);
-
-}
-
-const clickStart = document.getElementById('startButton')
+const clickStart = document.getElementById('startButton');
 clickStart.addEventListener('click', handlerStart);
 
 function handlerStart() {
-  updateTimer()
   const timeInterval = setInterval(() => {
+    const endDate = datetimePicker.value;
 
-    updateTimer()
+    timeDifference = calculateTimeDifference(endDate);
 
+    const { days, hours, minutes, seconds } = convertMs(timeDifference);
+
+    document.getElementById('days').textContent = addLeadingZero(days);
+    document.getElementById('hours').textContent = addLeadingZero(hours);
+    document.getElementById('minutes').textContent = addLeadingZero(minutes);
+    document.getElementById('seconds').textContent = addLeadingZero(seconds);
+
+    if (timeDifference <= 0) {
+      clearInterval(timeInterval);
+      datetimePicker.disabled = false;
+    }
   }, 1000);
 
-  if (timeDifference === 0) {
-    clearInterval(timeInterval);
-    datetimePicker.disabled = false;
-  } else {
-    datetimePicker.disabled = true;
-    document.getElementById('startButton').disabled = true;
-
-  }
-
+  datetimePicker.disabled = true;
+  document.getElementById('startButton').disabled = true;
 }
-
-

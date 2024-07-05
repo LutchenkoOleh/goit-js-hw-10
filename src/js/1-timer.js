@@ -57,13 +57,12 @@ function addLeadingZero(value) {
 
 let timeDifference;
 
-const clickStart = document.getElementById('startButton');
+const clickStart = document.getElementById('startButton')
+clickStart.disabled = true;
 clickStart.addEventListener('click', handlerStart);
-
 function handlerStart() {
   const timeInterval = setInterval(() => {
     const endDate = datetimePicker.value;
-
     timeDifference = calculateTimeDifference(endDate);
 
     const { days, hours, minutes, seconds } = convertMs(timeDifference);
@@ -73,12 +72,12 @@ function handlerStart() {
     document.getElementById('minutes').textContent = addLeadingZero(minutes);
     document.getElementById('seconds').textContent = addLeadingZero(seconds);
 
-    if (timeDifference <= 0) {
+    if (timeDifference <= 1000) {
       clearInterval(timeInterval);
       datetimePicker.disabled = false;
     }
   }, 1000);
 
   datetimePicker.disabled = true;
-  document.getElementById('startButton').disabled = true;
+  clickStart.disabled = true;
 }
